@@ -21,3 +21,6 @@
 .photo-card--portrait,.photo-card--landscape { display:block; background:#ded9d0; aspect-ratio:4 / 3; }
 .photo-card--portrait img,.photo-card--landscape img { width:100%; height:100%; object-fit:contain; }
 @media (max-width:700px) { .photos { gap:10px; } .film-strip { padding:18px 9px; } .photo-card { flex-basis:calc((100% - 20px) / 3); } .photo-card,.photo-card img { min-height:0; } }
+
+/* Keep the film-strip gallery focused on imagery alone. */
+.photo-card figcaption { display:none; }
