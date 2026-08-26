@@ -16,13 +16,15 @@ function enablePhotoDragging(track) {
     startScrollLeft = track.scrollLeft;
     hasDragged = false;
     track.classList.add('is-dragging');
-    try { track.setPointerCapture(pointerId); } catch { /* Some browsers do not capture synthetic pointers. */ }
   });
 
   track.addEventListener('pointermove', (event) => {
     if (event.pointerId !== pointerId) return;
     const distance = event.clientX - startX;
-    if (Math.abs(distance) > 6) hasDragged = true;
+    if (Math.abs(distance) > 6 && !hasDragged) {
+      hasDragged = true;
+      try { track.setPointerCapture(pointerId); } catch { /* Pointer capture is not available in every browser. */ }
+    }
     if (hasDragged) {
       track.scrollLeft = startScrollLeft - distance;
       event.preventDefault();
@@ -36,7 +38,9 @@ function enablePhotoDragging(track) {
       window.setTimeout(() => delete track.dataset.dragged, 0);
     }
     track.classList.remove('is-dragging');
-    try { track.releasePointerCapture(pointerId); } catch { /* Pointer capture may already be released. */ }
+    if (hasDragged) {
+      try { track.releasePointerCapture(pointerId); } catch { /* Pointer capture may already be released. */ }
+    }
     pointerId = null;
   };
 
