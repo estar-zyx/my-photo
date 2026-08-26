@@ -1,7 +1,6 @@
 const galleryButton = document.querySelector('[data-scroll-to="gallery"]');
 const lightbox = document.querySelector('.lightbox');
 const lightboxImage = lightbox.querySelector('img');
-const lightboxCaption = lightbox.querySelector('.lightbox-caption');
 const closeButton = lightbox.querySelector('.lightbox-close');
 
 function enablePhotoDragging(track) {
@@ -82,6 +81,15 @@ function organizeAlbums() {
   });
 }
 
+function usePhotoPreviews() {
+  document.querySelectorAll('.photo-card img').forEach((image) => {
+    const originalSource = image.getAttribute('src');
+    image.dataset.fullSrc = originalSource;
+    image.src = originalSource.replace(/^web_images\/(.+)\.(?:jpe?g|png)$/i, 'web_images/previews/$1.webp');
+  });
+}
+
+usePhotoPreviews();
 organizeAlbums();
 
 galleryButton.addEventListener('click', () => document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' }));
@@ -93,9 +101,8 @@ document.querySelectorAll('.photo-card').forEach((card) => {
       return;
     }
     const image = card.querySelector('img');
-    lightboxImage.src = image.src;
+    lightboxImage.src = image.dataset.fullSrc || image.src;
     lightboxImage.alt = image.alt;
-    lightboxCaption.textContent = image.nextElementSibling.textContent;
     lightbox.classList.add('is-open');
     lightbox.setAttribute('aria-hidden', 'false');
     closeButton.focus();
