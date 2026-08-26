@@ -4,18 +4,61 @@ const lightboxImage = lightbox.querySelector('img');
 const lightboxCaption = lightbox.querySelector('.lightbox-caption');
 const closeButton = lightbox.querySelector('.lightbox-close');
 
+function enablePhotoDragging(track) {
+  let pointerId = null;
+  let startX = 0;
+  let startScrollLeft = 0;
+  let hasDragged = false;
+
+  track.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0 || event.isPrimary === false) return;
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    startScrollLeft = track.scrollLeft;
+    hasDragged = false;
+    track.classList.add('is-dragging');
+    try { track.setPointerCapture(pointerId); } catch { /* Some browsers do not capture synthetic pointers. */ }
+  });
+
+  track.addEventListener('pointermove', (event) => {
+    if (event.pointerId !== pointerId) return;
+    const distance = event.clientX - startX;
+    if (Math.abs(distance) > 6) hasDragged = true;
+    if (hasDragged) {
+      track.scrollLeft = startScrollLeft - distance;
+      event.preventDefault();
+    }
+  });
+
+  const stopDragging = (event) => {
+    if (event.pointerId !== pointerId) return;
+    if (hasDragged) {
+      track.dataset.dragged = 'true';
+      window.setTimeout(() => delete track.dataset.dragged, 0);
+    }
+    track.classList.remove('is-dragging');
+    try { track.releasePointerCapture(pointerId); } catch { /* Pointer capture may already be released. */ }
+    pointerId = null;
+  };
+
+  track.addEventListener('pointerup', stopDragging);
+  track.addEventListener('pointercancel', stopDragging);
+  track.addEventListener('dragstart', (event) => event.preventDefault());
+}
+
 function organizeAlbums() {
   const gallery = document.getElementById('gallery');
   const cards = Array.from(gallery.querySelectorAll('.photo-card'));
   cards.find((card) => card.querySelector('img').alt === '作品一').classList.add('photo-card--portrait');
   cards.find((card) => card.querySelector('img').alt === '作品四').classList.add('photo-card--landscape');
   const groups = [
-    ['封面与合照', [13, 14]],
+    ['赛场与伙伴', [64, 13, 14]],
     ['电子竞赛', [0, 2, 3, 4, 6]],
-    ['创作作品', [1, 7, 8, 9, 10, 11, 6]],
+    ['创作作品', [7, 1, 8, 9, 10, 11, 6]],
     ['萝卜日记', [15, 16, 17, 18, 19, 20]],
-    ['惬意时刻', [21, 22, 23, 24]],
+    ['好友相聚', [21, 22, 23, 24]],
     ['日常瞬间', [25, 26, 27, 28]],
+    ['毕业时刻', [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63]],
     ['RM', [5, 12, 29, 30, 31, 32, 33, 34, 35, 36]],
   ];
 
@@ -26,10 +69,15 @@ function organizeAlbums() {
     album.className = 'album';
     album.setAttribute('aria-labelledby', titleId);
     album.innerHTML = `<div class="album-heading"><p>${String(index + 1).padStart(2, '0')}</p><h3 id="${titleId}">${name}</h3><span>${String(indexes.length).padStart(2, '0')} PHOTOS</span></div>`;
+    const carousel = document.createElement('div');
+    carousel.className = 'album-carousel';
     const grid = document.createElement('div');
-    grid.className = 'photos';
+    grid.className = 'photos film-strip';
+    grid.setAttribute('aria-label', `${name}照片`);
     indexes.forEach((cardIndex) => grid.append(cards[cardIndex]));
-    album.append(grid);
+    enablePhotoDragging(grid);
+    carousel.append(grid);
+    album.append(carousel);
     gallery.append(album);
   });
 }
@@ -39,7 +87,11 @@ organizeAlbums();
 galleryButton.addEventListener('click', () => document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' }));
 
 document.querySelectorAll('.photo-card').forEach((card) => {
-  card.addEventListener('click', () => {
+  card.addEventListener('click', (event) => {
+    if (card.closest('.photos')?.dataset.dragged === 'true') {
+      event.preventDefault();
+      return;
+    }
     const image = card.querySelector('img');
     lightboxImage.src = image.src;
     lightboxImage.alt = image.alt;
