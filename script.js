@@ -87,9 +87,10 @@ function organizeAlbums() {
 
 function usePhotoPreviews() {
   document.querySelectorAll('.photo-card img').forEach((image) => {
-    const originalSource = image.getAttribute('src');
+    // The preview URL is already in the HTML, so the browser never starts
+    // downloading the full-size photo while the gallery page is opening.
+    const originalSource = image.dataset.fullSrc || image.getAttribute('src');
     image.dataset.fullSrc = originalSource;
-    image.src = originalSource.replace(/^web_images\/(.+)\.(?:jpe?g|png)$/i, 'web_images/previews/$1.webp');
   });
 }
 
