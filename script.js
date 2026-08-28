@@ -2,6 +2,12 @@ const galleryButton = document.querySelector('[data-scroll-to="gallery"]');
 const lightbox = document.querySelector('.lightbox');
 const lightboxImage = lightbox.querySelector('img');
 const closeButton = lightbox.querySelector('.lightbox-close');
+const lightboxPrevious = lightbox.querySelector('[data-lightbox-previous]');
+const lightboxNext = lightbox.querySelector('[data-lightbox-next]');
+const randomButton = document.querySelector('[data-random-photo]');
+let lightboxCards = [];
+let lightboxIndex = 0;
+let lightboxSwipeStart = null;
 
 function enablePhotoDragging(track) {
   let pointerId = null;
@@ -49,6 +55,20 @@ function enablePhotoDragging(track) {
   track.addEventListener('dragstart', (event) => event.preventDefault());
 }
 
+function enableAlbumProgress(track, progress) {
+  const updateProgress = () => {
+    const card = track.querySelector('.photo-card');
+    if (!card) return;
+    const gap = Number.parseFloat(getComputedStyle(track).gap) || 0;
+    const step = card.getBoundingClientRect().width + gap;
+    const current = Math.min(track.querySelectorAll('.photo-card').length, Math.max(1, Math.round(track.scrollLeft / step) + 1));
+    progress.textContent = `${current} / ${track.querySelectorAll('.photo-card').length}`;
+  };
+
+  track.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+}
+
 function organizeAlbums() {
   const gallery = document.getElementById('gallery');
   const cards = Array.from(gallery.querySelectorAll('.photo-card'));
@@ -71,7 +91,7 @@ function organizeAlbums() {
     const titleId = `album-${index + 1}`;
     album.className = 'album';
     album.setAttribute('aria-labelledby', titleId);
-    album.innerHTML = `<div class="album-heading"><p>${String(index + 1).padStart(2, '0')}</p><h3 id="${titleId}">${name}</h3><span>${String(indexes.length).padStart(2, '0')} PHOTOS</span></div>`;
+    album.innerHTML = `<div class="album-heading"><p>${String(index + 1).padStart(2, '0')}</p><h3 id="${titleId}">${name}</h3><div class="album-meta"><span>${String(indexes.length).padStart(2, '0')} PHOTOS</span><span class="album-progress">1 / ${indexes.length}</span></div></div>`;
     const carousel = document.createElement('div');
     carousel.className = 'album-carousel';
     const grid = document.createElement('div');
@@ -79,6 +99,7 @@ function organizeAlbums() {
     grid.setAttribute('aria-label', `${name}照片`);
     indexes.forEach((cardIndex) => grid.append(cards[cardIndex]));
     enablePhotoDragging(grid);
+    enableAlbumProgress(grid, album.querySelector('.album-progress'));
     carousel.append(grid);
     album.append(carousel);
     gallery.append(album);
@@ -99,19 +120,37 @@ organizeAlbums();
 
 galleryButton.addEventListener('click', () => document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' }));
 
+function showLightboxPhoto(index) {
+  if (!lightboxCards.length) return;
+  lightboxIndex = (index + lightboxCards.length) % lightboxCards.length;
+  const image = lightboxCards[lightboxIndex].querySelector('img');
+  lightboxImage.src = image.dataset.fullSrc || image.src;
+  lightboxImage.alt = image.alt;
+}
+
+function openLightbox(card) {
+  const track = card.closest('.photos');
+  lightboxCards = track ? Array.from(track.querySelectorAll('.photo-card')) : [card];
+  lightboxIndex = lightboxCards.indexOf(card);
+  showLightboxPhoto(lightboxIndex);
+  lightbox.classList.add('is-open');
+  lightbox.setAttribute('aria-hidden', 'false');
+  closeButton.focus();
+}
+
 document.querySelectorAll('.photo-card').forEach((card) => {
   card.addEventListener('click', (event) => {
     if (card.closest('.photos')?.dataset.dragged === 'true') {
       event.preventDefault();
       return;
     }
-    const image = card.querySelector('img');
-    lightboxImage.src = image.dataset.fullSrc || image.src;
-    lightboxImage.alt = image.alt;
-    lightbox.classList.add('is-open');
-    lightbox.setAttribute('aria-hidden', 'false');
-    closeButton.focus();
+    openLightbox(card);
   });
+});
+
+randomButton.addEventListener('click', () => {
+  const cards = Array.from(document.querySelectorAll('.photo-card'));
+  openLightbox(cards[Math.floor(Math.random() * cards.length)]);
 });
 
 function closeLightbox() {
@@ -121,5 +160,19 @@ function closeLightbox() {
 }
 
 closeButton.addEventListener('click', closeLightbox);
+lightboxPrevious.addEventListener('click', () => showLightboxPhoto(lightboxIndex - 1));
+lightboxNext.addEventListener('click', () => showLightboxPhoto(lightboxIndex + 1));
 lightbox.addEventListener('click', (event) => { if (event.target === lightbox) closeLightbox(); });
-document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox(); });
+lightbox.addEventListener('pointerdown', (event) => { if (event.target === lightboxImage) lightboxSwipeStart = event.clientX; });
+lightbox.addEventListener('pointerup', (event) => {
+  if (lightboxSwipeStart === null) return;
+  const distance = event.clientX - lightboxSwipeStart;
+  if (Math.abs(distance) > 45) showLightboxPhoto(lightboxIndex + (distance < 0 ? 1 : -1));
+  lightboxSwipeStart = null;
+});
+document.addEventListener('keydown', (event) => {
+  if (!lightbox.classList.contains('is-open')) return;
+  if (event.key === 'Escape') closeLightbox();
+  if (event.key === 'ArrowLeft') showLightboxPhoto(lightboxIndex - 1);
+  if (event.key === 'ArrowRight') showLightboxPhoto(lightboxIndex + 1);
+});
