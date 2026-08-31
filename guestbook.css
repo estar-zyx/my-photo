@@ -25,7 +25,6 @@ input:focus,textarea:focus { border-color:#ab8138; }
 input::placeholder,textarea::placeholder { color:#9d957f; }
 .form-footer { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:end; margin-top:15px; }
 .form-footer p { margin:0 0 8px; color:#8a816e; font:11px Georgia,serif; }
-.turnstile-wrap { grid-column:1 / -1; min-height:0; }
 button { justify-self:end; min-width:150px; padding:13px 18px; border:1px solid #8c6827; border-radius:999px; color:#2d2618; background:linear-gradient(110deg,#e9cf90,#c69d4c); box-shadow:0 7px 16px rgba(130,94,27,.18); font:700 13px -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif; cursor:pointer; transition:transform .2s,box-shadow .2s,opacity .2s; }
 button:hover { transform:translateY(-2px); box-shadow:0 11px 20px rgba(130,94,27,.25); }
 button:disabled { cursor:wait; opacity:.65; transform:none; }

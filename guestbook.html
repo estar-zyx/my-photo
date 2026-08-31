@@ -28,7 +28,6 @@
         <textarea id="message" name="message" maxlength="160" rows="5" placeholder="此刻，你想留下什么？" required></textarea>
         <div class="form-footer">
           <p><span id="message-count">0</span> / 160</p>
-          <div class="turnstile-wrap" data-turnstile></div>
           <button type="submit">留下印记 <span aria-hidden="true">↗</span></button>
         </div>
         <p class="form-status" data-guestbook-status role="status" aria-live="polite"></p>
@@ -38,6 +37,5 @@
   </main>
   <script src="guestbook-config.js"></script>
   <script src="guestbook.js"></script>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=turnstileReady" async defer></script>
 </body>
 </html>
