@@ -27,6 +27,8 @@ function renderTurnstile() {
   turnstileWidgetId = window.turnstile.render('[data-turnstile]', { sitekey: config().turnstileSiteKey, theme: 'light' });
 }
 
+window.turnstileReady = renderTurnstile;
+
 async function submitMessage(event) {
   event.preventDefault();
   if (!ready()) return setStatus('留言服务尚未完成设置。', true);
@@ -47,7 +49,7 @@ async function submitMessage(event) {
     form.reset();
     messageCount.textContent = '0';
     window.turnstile?.reset(turnstileWidgetId);
-    setStatus('留言已送达，审核通过后会出现在留言墙。');
+    setStatus('留言已送达，等待审核。');
   } catch (error) {
     setStatus(error.message || '暂时无法提交，请稍后再试。', true);
   } finally {
@@ -58,6 +60,6 @@ async function submitMessage(event) {
 messageInput.addEventListener('input', () => { messageCount.textContent = String(messageInput.value.length); });
 form.addEventListener('submit', submitMessage);
 if (!ready()) notice.hidden = false;
-else window.addEventListener('load', renderTurnstile);
+else if (window.turnstile) renderTurnstile();
 
 window.Guestbook = { submitMessage };
