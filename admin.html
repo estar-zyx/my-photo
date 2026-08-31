@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>留言审核台</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="admin-page">
+    <section class="admin-lock" data-admin-lock aria-labelledby="admin-title">
+      <p>PRIVATE DESK · ZYX</p>
+      <h1 id="admin-title">留言审核台</h1>
+      <form data-admin-login>
+        <label for="admin-password">管理口令</label>
+        <input id="admin-password" type="password" autocomplete="current-password" required>
+        <button type="submit">进入审核台</button>
+      </form>
+      <p data-admin-status role="status" aria-live="polite"></p>
+    </section>
+    <section class="admin-desk" data-admin-desk hidden aria-labelledby="pending-title">
+      <header><div><p>UNPUBLISHED NOTES</p><h2 id="pending-title">待审核留言</h2></div><button type="button" class="sign-out" data-admin-signout>结束管理</button></header>
+      <div class="pending-list" data-pending-list></div>
+      <p class="empty-pending" data-empty-pending>目前没有待审核留言。</p>
+    </section>
+  </main>
+  <script src="guestbook-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

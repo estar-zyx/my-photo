@@ -1,0 +1,28 @@
+:root { --night:#101710; --paper:#f0e8d6; --gold:#d2b36b; --line:rgba(231,207,148,.26); }
+* { box-sizing:border-box; }
+body { min-width:320px; min-height:100svh; margin:0; color:var(--paper); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:radial-gradient(circle at 78% 16%,rgba(188,151,68,.15),transparent 27%),#0b100b; }
+.admin-page { width:min(960px,100%); min-height:100svh; margin:auto; padding:clamp(28px,7vw,90px) 22px; }
+.admin-lock { width:min(420px,100%); margin:11vh auto 0; padding:38px; border:1px solid var(--line); border-radius:4px 34px 4px 30px; background:linear-gradient(145deg,rgba(249,241,221,.09),rgba(249,241,221,.02)); box-shadow:0 30px 80px rgba(0,0,0,.36); }
+.admin-lock > p:first-child,.admin-desk header p { margin:0; color:var(--gold); font-size:10px; font-weight:700; letter-spacing:.2em; }
+h1,h2 { margin:12px 0 28px; font:500 clamp(32px,4vw,50px)/1 Georgia,"Songti SC",serif; letter-spacing:-.04em; }
+form { display:grid; gap:10px; }
+label { color:rgba(240,232,214,.72); font-size:12px; }
+input { width:100%; padding:13px 2px; border:0; border-bottom:1px solid var(--line); outline:0; color:var(--paper); background:transparent; font-size:16px; }
+input:focus { border-color:var(--gold); }
+button { border:1px solid rgba(213,179,99,.72); border-radius:999px; padding:12px 17px; color:#1d1a10; background:linear-gradient(115deg,#e9d194,#c79e4a); font-weight:700; cursor:pointer; }
+.admin-lock form button { margin-top:15px; }
+[data-admin-status] { min-height:20px; margin:17px 0 0; color:#e0ba70; font-size:12px; }
+[data-admin-status].is-error { color:#e97f6b; }
+.admin-desk { padding:0 0 50px; }
+.admin-desk header { display:flex; align-items:end; justify-content:space-between; gap:18px; padding-bottom:23px; border-bottom:1px solid var(--line); }
+.admin-desk h2 { margin:9px 0 0; }
+.sign-out { color:var(--paper); background:transparent; }
+.pending-list { display:grid; gap:14px; margin-top:24px; }
+.review-card { padding:23px; border:1px solid var(--line); border-radius:3px 22px 3px 19px; background:rgba(241,232,213,.06); }
+.review-card p { margin:0 0 20px; color:#faf4e8; font:400 17px/1.75 Georgia,"Songti SC",serif; white-space:pre-wrap; }
+.review-meta { display:flex; justify-content:space-between; gap:15px; color:rgba(240,232,214,.61); font-size:12px; }
+.review-actions { display:flex; gap:9px; margin-top:20px; }
+.review-actions button { min-width:86px; }
+.review-actions button:last-child { color:#f5d8d1; border-color:rgba(215,111,91,.55); background:transparent; }
+.empty-pending { margin:28px 0; color:rgba(240,232,214,.58); }
+@media (max-width:560px) { .admin-page { padding:28px 18px; } .admin-lock { margin-top:6vh; padding:28px 24px; } .admin-desk header { align-items:start; flex-direction:column; } }

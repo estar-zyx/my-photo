@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#172017">
+  <title>留言簿｜ZYX · 光影回忆</title>
+  <link rel="icon" type="image/jpeg" href="web_images/logo.jpg">
+  <link rel="stylesheet" href="guestbook.css">
+</head>
+<body>
+  <main class="guestbook-page">
+    <a class="return-memory" data-return-memory href="index.html">返回回忆</a>
+    <section class="guestbook-intro" aria-labelledby="guestbook-title">
+      <p>WORDS LEFT IN THE MARGIN</p>
+      <h1 id="guestbook-title">留一句话，<br><em>再走吧</em></h1>
+      <span aria-hidden="true">✦</span>
+    </section>
+    <section class="guestbook-letter" aria-labelledby="letter-title">
+      <div class="letter-seal" aria-hidden="true">ZYX</div>
+      <p class="letter-number">No. 01 / A NOTE FOR THE MEMORY BOOK</p>
+      <h2 id="letter-title">把想说的话，留在这里。</h2>
+      <p class="letter-copy">不用署真名。每一张小小的便签，都会在审核后成为回忆的一部分。</p>
+      <form data-guestbook-form>
+        <label for="nickname">昵称 <span>01</span></label>
+        <input id="nickname" name="nickname" maxlength="16" autocomplete="nickname" placeholder="写下一个名字" required>
+        <label for="message">想说的话 <span>02</span></label>
+        <textarea id="message" name="message" maxlength="160" rows="5" placeholder="此刻，你想留下什么？" required></textarea>
+        <div class="form-footer">
+          <p><span id="message-count">0</span> / 160</p>
+          <div class="turnstile-wrap" data-turnstile></div>
+          <button type="submit">留下印记 <span aria-hidden="true">↗</span></button>
+        </div>
+        <p class="form-status" data-guestbook-status role="status" aria-live="polite"></p>
+      </form>
+      <p class="setup-notice" data-setup-notice hidden>留言服务尚未完成设置。</p>
+    </section>
+  </main>
+  <script src="guestbook-config.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+  <script src="guestbook.js"></script>
+</body>
+</html>
