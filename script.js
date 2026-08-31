@@ -117,7 +117,7 @@ function closeLightbox() {
 function buildMemoryStage() {
   const stage = document.createElement('section');
   stage.className = 'memory-stage';
-  stage.innerHTML = '<h1>恰好想起</h1><button class="stage-photo" type="button" data-random-stage aria-label="打开这张随机照片"><img alt="随机回忆"></button>';
+  stage.innerHTML = '<button class="stage-photo" type="button" data-random-stage aria-label="打开这张随机照片"><img alt="随机回忆"></button><h1>恰好想起</h1><a class="guestbook-entry" data-guestbook-entry href="guestbook.html"><span>留言簿</span><strong>留下一句话给我</strong><i aria-hidden="true">↗</i></a>';
   const stageButton = stage.querySelector('[data-random-stage]');
   const stageImage = stageButton.querySelector('img');
   let stageIndex = -1;
