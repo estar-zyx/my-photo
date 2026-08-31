@@ -8,9 +8,9 @@ nav { height:100%; display:flex; align-items:center; justify-content:space-betwe
 .logo { color:var(--paper); font-size:13px; font-weight:700; letter-spacing:.18em; text-decoration:none; }
 .logo span { color:var(--gold); }
 #memory-hall { position:relative; z-index:2; width:100%; height:100svh; max-height:100svh; min-height:0; display:grid; grid-template-columns:minmax(230px,26vw) minmax(0,1fr); gap:clamp(28px,4vw,72px); padding:96px 5.3vw 4vh; overflow:hidden; }
-.memory-stage { align-self:stretch; display:flex; flex-direction:column; justify-content:flex-start; min-width:0; padding-top:clamp(6px,1.8vh,22px); }
+.memory-stage { position:relative; align-self:stretch; display:flex; flex-direction:column; justify-content:flex-start; min-width:0; padding-top:clamp(30px,calc(4vh + 2px),40px); }
 .stage-kicker { margin:0; color:var(--gold); font-size:10px; font-weight:700; letter-spacing:.23em; }
-.memory-stage h1 { margin:20px 0 16px; color:var(--paper); font:500 clamp(34px,4vw,63px)/1.08 Georgia,"Songti SC",serif; letter-spacing:-.04em; }
+.memory-stage h1 { margin:20px 0 0; color:var(--paper); font:500 clamp(34px,4vw,63px)/1.08 Georgia,"Songti SC",serif; letter-spacing:-.04em; }
 .stage-photo { position:relative; display:block; width:min(100%,300px); aspect-ratio:4/5; padding:12px; overflow:hidden; border:1px solid rgba(221,189,108,.68); background:#080b09; box-shadow:22px 27px 0 rgba(217,187,112,.08),0 26px 65px rgba(0,0,0,.38); cursor:zoom-in; transform:rotate(-3deg); }
 .stage-photo::before { content:"NOW"; position:absolute; z-index:1; top:18px; right:-29px; padding:6px 12px; color:#161a13; background:var(--gold); font:10px Georgia,serif; letter-spacing:.16em; transform:rotate(90deg); }
 .stage-photo img { display:block; width:100%; height:100%; object-fit:contain; background:#0a0e0b; filter:saturate(.84) contrast(1.05); opacity:1; transition:opacity .26s ease; }
@@ -22,6 +22,9 @@ nav { height:100%; display:flex; align-items:center; justify-content:space-betwe
 .guestbook-entry strong { grid-column:1; margin-top:5px; font:500 17px Georgia,"Songti SC",serif; letter-spacing:.04em; }
 .guestbook-entry i { grid-column:2; grid-row:1 / -1; padding-left:18px; color:var(--gold); font-size:20px; font-style:normal; }
 .guestbook-entry:hover { background:linear-gradient(115deg,rgba(217,187,112,.28),rgba(255,255,255,.06)); transform:translateY(-3px); }
+.review-entry { display:flex; align-items:center; justify-content:space-between; width:min(100%,300px); margin-top:10px; padding:9px 14px; color:rgba(241,234,217,.78); border:1px solid rgba(221,189,108,.3); background:rgba(8,12,10,.28); font-size:12px; letter-spacing:.08em; text-decoration:none; transition:color .2s ease,border-color .2s ease,background .2s ease; }
+.review-entry span { color:var(--gold); font-size:15px; }
+.review-entry:hover { color:var(--paper); border-color:rgba(221,189,108,.7); background:rgba(217,187,112,.12); }
 .stage-note { margin:19px 0 0; color:rgba(241,234,217,.64); font-size:12px; letter-spacing:.06em; }
 .album-wall { position:relative; min-width:0; min-height:0; height:100%; display:flex; flex-direction:column; justify-content:center; gap:clamp(6px,1vh,12px); overflow:hidden; }
 .album { min-height:0; height:calc((100% - 76px) / 8); display:grid; grid-template-columns:124px minmax(0,1fr); gap:18px; align-items:center; padding:5px 0 5px 15px; border-left:1px solid var(--line); background:linear-gradient(90deg,rgba(255,255,255,.035),transparent 72%); transition:transform .25s ease,background .25s ease; }
@@ -64,6 +67,7 @@ footer { display:none; }
   .memory-stage h1 { font-size:42px; }
   .stage-photo { width:100%; transform:rotate(-1.5deg); }
   .guestbook-entry { width:100%; min-height:86px; margin-top:0; }
+  .review-entry { position:static; width:100%; margin-top:10px; }
   .album-wall { display:flex; height:auto; overflow:visible; gap:27px; }
   .album,.album:nth-child(even),.album:nth-child(3n) { width:100%; height:auto; min-height:0; display:block; margin:0; padding:0; border:0; background:transparent; }
   .album-heading,.album:nth-child(even) .album-heading { display:flex; align-items:baseline; justify-content:space-between; margin:0 0 8px; text-align:left; }
