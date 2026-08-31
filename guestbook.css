@@ -1,8 +1,8 @@
 :root { --forest:#172017; --forest-deep:#0b100c; --paper:#f2ebdb; --paper-shadow:#d9cfba; --ink:#1a2119; --gold:#c7a65b; --soft-gold:#ead29a; --line:rgba(196,158,78,.42); }
 * { box-sizing:border-box; }
-body { min-width:320px; margin:0; overflow:hidden; color:var(--paper); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:radial-gradient(circle at 85% 15%,rgba(188,153,74,.17),transparent 26%),radial-gradient(circle at 10% 78%,#34422d 0%,transparent 35%),var(--forest-deep); }
+body { min-width:320px; margin:0; overflow-x:hidden; color:var(--paper); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:radial-gradient(circle at 85% 15%,rgba(188,153,74,.17),transparent 26%),radial-gradient(circle at 10% 78%,#34422d 0%,transparent 35%),var(--forest-deep); }
 body::before { content:""; position:fixed; z-index:-1; inset:0; opacity:.24; background-image:radial-gradient(rgba(251,239,203,.32) .55px,transparent .75px); background-size:7px 7px; }
-.guestbook-page { width:min(1180px,100%); height:100svh; margin:auto; padding:clamp(20px,3.2vw,48px) clamp(20px,5vw,70px) 24px; display:grid; grid-template-columns:minmax(210px,.72fr) minmax(0,1.22fr); grid-template-rows:auto 1fr; column-gap:clamp(30px,7vw,110px); row-gap:clamp(20px,3vh,34px); align-items:center; }
+.guestbook-page { width:min(1180px,100%); min-height:100svh; margin:auto; padding:clamp(20px,3.2vw,48px) clamp(20px,5vw,70px) 64px; display:grid; grid-template-columns:minmax(210px,.72fr) minmax(0,1.22fr); grid-template-rows:auto minmax(540px,1fr) auto; column-gap:clamp(30px,7vw,110px); row-gap:clamp(20px,3vh,34px); align-items:center; }
 .return-memory { grid-column:1 / -1; justify-self:start; display:inline-flex; align-items:center; gap:9px; color:rgba(242,235,219,.78); font-size:12px; letter-spacing:.15em; text-decoration:none; }
 .return-memory::before { content:"←"; color:var(--soft-gold); font-size:18px; }
 .guestbook-intro { padding-top:0; }
@@ -31,5 +31,14 @@ button:disabled { cursor:wait; opacity:.65; transform:none; }
 .form-status { min-height:20px; margin:15px 0 0; color:#78643a; font-size:12px; line-height:1.6; }
 .form-status.is-error { color:#a14232; }
 .setup-notice { position:relative; margin:12px 0 0; padding:10px 12px; border-left:2px solid #b08a43; color:#67542e; background:rgba(230,208,152,.22); font-size:12px; }
-@media (max-width:720px) { body { overflow-x:hidden; overflow-y:auto; } .guestbook-page { display:block; height:auto; min-height:100svh; padding:28px 20px 58px; } .guestbook-intro { padding:60px 4px 42px; } .guestbook-intro h1 { font-size:53px; } .guestbook-letter { padding:31px 25px 27px; border-radius:3px 34px 3px 30px; } .letter-number { max-width:210px; margin-bottom:30px; line-height:1.7; } .letter-seal { width:44px; height:44px; right:22px; top:24px; font-size:10px; } .form-footer { grid-template-columns:1fr; } button { justify-self:stretch; } }
+.message-section { grid-column:1 / -1; width:100%; padding-top:32px; border-top:1px solid rgba(234,210,154,.2); }
+.wall-heading { display:flex; align-items:end; justify-content:space-between; gap:18px; margin-bottom:18px; }
+.wall-heading h2 { margin:0; color:var(--paper); font:500 clamp(28px,3.2vw,42px)/1 Georgia,"Songti SC",serif; letter-spacing:-.04em; }
+.message-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.message-grid article { min-height:150px; padding:22px; border:1px solid rgba(234,210,154,.2); color:var(--paper); background:linear-gradient(135deg,rgba(242,235,219,.08),rgba(242,235,219,.025)); box-shadow:0 15px 30px rgba(0,0,0,.12); }
+.message-grid article span { display:block; margin-bottom:28px; color:var(--soft-gold); font:10px Georgia,serif; letter-spacing:.2em; }
+.message-grid article p { margin:0; color:rgba(242,235,219,.93); font:16px/1.8 Georgia,"Songti SC",serif; }
+.message-grid article strong { display:block; margin-top:18px; color:rgba(234,210,154,.76); font:11px -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif; font-weight:500; letter-spacing:.08em; }
+.message-empty { grid-column:1 / -1; margin:0; padding:26px 0; color:rgba(242,235,219,.6); font-size:13px; }
+@media (max-width:720px) { .guestbook-page { display:block; min-height:100svh; padding:28px 20px 58px; } .guestbook-intro { padding:60px 4px 42px; } .guestbook-intro h1 { font-size:53px; } .guestbook-letter { padding:31px 25px 27px; border-radius:3px 34px 3px 30px; } .letter-number { max-width:210px; margin-bottom:30px; line-height:1.7; } .letter-seal { width:44px; height:44px; right:22px; top:24px; font-size:10px; } .form-footer { grid-template-columns:1fr; } button { justify-self:stretch; } .message-section { margin-top:48px; padding-top:28px; } .wall-heading { display:block; } .wall-heading h2 { margin-top:11px; } .message-grid { grid-template-columns:1fr; } }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition-duration:.01ms!important; } }

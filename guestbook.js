@@ -6,6 +6,7 @@ const nicknameInput = document.querySelector('#nickname');
 const messageInput = document.querySelector('#message');
 const messageCount = document.querySelector('#message-count');
 const submitButton = form.querySelector('button[type="submit"]');
+const publicMessages = document.querySelector('[data-public-messages]');
 
 function setStatus(message, isError = false) {
   statusLine.textContent = message;
@@ -18,6 +19,42 @@ function ready() {
 
 function endpoint(path) {
   return `${config().workerUrl.replace(/\/$/, '')}${path}`;
+}
+
+function renderPublicMessages(messages) {
+  publicMessages.replaceChildren();
+  if (!messages.length) {
+    const empty = document.createElement('p');
+    empty.className = 'message-empty';
+    empty.textContent = '还没有公开留言，第一句留给你。';
+    publicMessages.append(empty);
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  messages.forEach((message, index) => {
+    const note = document.createElement('article');
+    const number = document.createElement('span');
+    const body = document.createElement('p');
+    const nickname = document.createElement('strong');
+    number.textContent = String(index + 1).padStart(2, '0');
+    body.textContent = message.body;
+    nickname.textContent = `— ${message.nickname}`;
+    note.append(number, body, nickname);
+    fragment.append(note);
+  });
+  publicMessages.append(fragment);
+}
+
+async function loadPublicMessages() {
+  if (!ready()) return;
+  try {
+    const response = await fetch(endpoint('/api/messages?limit=24'));
+    const payload = await response.json();
+    if (!response.ok) throw new Error();
+    renderPublicMessages(payload.messages || []);
+  } catch {
+    publicMessages.replaceChildren();
+  }
 }
 
 async function submitMessage(event) {
@@ -48,5 +85,6 @@ async function submitMessage(event) {
 messageInput.addEventListener('input', () => { messageCount.textContent = String(messageInput.value.length); });
 form.addEventListener('submit', submitMessage);
 if (!ready()) notice.hidden = false;
+else loadPublicMessages();
 
-window.Guestbook = { submitMessage };
+window.Guestbook = { submitMessage, loadPublicMessages };
