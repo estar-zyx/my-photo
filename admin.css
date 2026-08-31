@@ -21,6 +21,10 @@ button { border:1px solid rgba(213,179,99,.72); border-radius:999px; padding:12p
 .review-card { padding:23px; border:1px solid var(--line); border-radius:3px 22px 3px 19px; background:rgba(241,232,213,.06); }
 .review-card p { margin:0 0 20px; color:#faf4e8; font:400 17px/1.75 Georgia,"Songti SC",serif; white-space:pre-wrap; }
 .review-meta { display:flex; justify-content:space-between; gap:15px; color:rgba(240,232,214,.61); font-size:12px; }
+.message-status { margin-left:auto; padding:3px 8px; border:1px solid rgba(231,207,148,.3); border-radius:999px; font-size:10px; letter-spacing:.06em; }
+.message-status.is-pending { color:#f0cd7a; }
+.message-status.is-approved { color:#a8d3ab; border-color:rgba(126,187,132,.42); }
+.message-status.is-deleted { color:#d9a09a; border-color:rgba(215,111,91,.4); }
 .review-actions { display:flex; gap:9px; margin-top:20px; }
 .review-actions button { min-width:86px; }
 .review-actions button:last-child { color:#f5d8d1; border-color:rgba(215,111,91,.55); background:transparent; }

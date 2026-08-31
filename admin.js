@@ -27,7 +27,7 @@ function requestOptions(options = {}) {
   return { ...options, headers: { 'x-guestbook-admin': password(), ...(options.headers || {}) } };
 }
 
-function renderPending(messages) {
+function renderMessages(messages) {
   list.replaceChildren();
   messages.forEach((message) => {
     const card = document.createElement('article');
@@ -42,10 +42,15 @@ function renderPending(messages) {
     const date = document.createElement('time');
     date.dateTime = message.created_at;
     date.textContent = formatDate(message.created_at);
-    meta.append(name, date);
+    const state = document.createElement('span');
+    state.className = `message-status is-${message.status}`;
+    state.dataset.messageStatus = '';
+    state.textContent = { pending: '待审核', approved: '已公开', deleted: '已删除' }[message.status] || '未知状态';
+    meta.append(name, date, state);
     const actions = document.createElement('div');
     actions.className = 'review-actions';
-    [['approve', '公开'], ['delete', '删除']].forEach(([action, label]) => {
+    const availableActions = message.status === 'pending' ? [['approve', '公开'], ['delete', '删除']] : message.status === 'approved' ? [['delete', '删除']] : [];
+    availableActions.forEach(([action, label]) => {
       const button = document.createElement('button');
       button.type = 'button'; button.textContent = label;
       button.addEventListener('click', () => reviewMessage(message.id, action, button));
@@ -57,11 +62,11 @@ function renderPending(messages) {
   empty.hidden = messages.length > 0;
 }
 
-async function loadPendingMessages() {
-  const response = await fetch(endpoint('/api/admin/messages?status=pending'), requestOptions({ cache: 'no-store' }));
+async function loadAllMessages() {
+  const response = await fetch(endpoint('/api/admin/messages'), requestOptions({ cache: 'no-store' }));
   const payload = await response.json();
-  if (!response.ok) throw new Error(payload.error || '暂时无法读取待审核留言。');
-  renderPending(payload.messages || []);
+  if (!response.ok) throw new Error(payload.error || '暂时无法读取留言。');
+  renderMessages(payload.messages || []);
 }
 
 async function openReviewDesk(event) {
@@ -72,7 +77,7 @@ async function openReviewDesk(event) {
   sessionStorage.setItem(sessionKey, value);
   setStatus('正在进入审核台…');
   try {
-    await loadPendingMessages();
+    await loadAllMessages();
     lock.hidden = true;
     desk.hidden = false;
   } catch (error) {
@@ -91,8 +96,7 @@ async function reviewMessage(id, action, clickedButton) {
     }));
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || '操作未完成。');
-    card?.remove();
-    empty.hidden = list.querySelectorAll('.review-card').length > 0;
+    await loadAllMessages();
   } catch (error) {
     buttons.forEach((button) => { button.disabled = false; });
     clickedButton?.focus();
@@ -111,4 +115,4 @@ function signOut() {
 
 loginForm.addEventListener('submit', openReviewDesk);
 document.querySelector('[data-admin-signout]').addEventListener('click', signOut);
-window.GuestbookAdmin = { openReviewDesk, reviewMessage, loadPendingMessages, signOut };
+window.GuestbookAdmin = { openReviewDesk, reviewMessage, loadAllMessages, signOut };
