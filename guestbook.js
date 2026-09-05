@@ -21,6 +21,16 @@ function endpoint(path) {
   return `${config().apiUrl.replace(/\/$/, '')}${path}`;
 }
 
+function formatCreatedAt(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const parts = new Intl.DateTimeFormat('zh-CN', {
+    timeZone: 'Asia/Shanghai', year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(date);
+  const part = (type) => parts.find((item) => item.type === type)?.value || '';
+  return `${part('year')}年${part('month')}月${part('day')}日 ${part('hour')}:${part('minute')}`;
+}
+
 function renderPublicMessages(messages) {
   publicMessages.replaceChildren();
   if (!messages.length) {
@@ -35,11 +45,17 @@ function renderPublicMessages(messages) {
     const note = document.createElement('article');
     const number = document.createElement('span');
     const body = document.createElement('p');
+    const meta = document.createElement('div');
     const nickname = document.createElement('strong');
+    const createdAt = document.createElement('time');
     number.textContent = String(index + 1).padStart(2, '0');
     body.textContent = message.body;
     nickname.textContent = `— ${message.nickname}`;
-    note.append(number, body, nickname);
+    createdAt.dateTime = message.createdAt || '';
+    createdAt.textContent = formatCreatedAt(message.createdAt);
+    meta.className = 'message-meta';
+    meta.append(nickname, createdAt);
+    note.append(number, body, meta);
     fragment.append(note);
   });
   publicMessages.append(fragment);
