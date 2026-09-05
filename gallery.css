@@ -69,7 +69,7 @@ footer { display:none; }
   .guestbook-entry { width:100%; min-height:86px; margin-top:0; }
   .review-entry { position:static; width:100%; margin-top:10px; }
   .album-wall { display:flex; height:auto; overflow:visible; gap:27px; }
-  .album,.album:nth-child(even),.album:nth-child(3n) { width:100%; height:auto; min-height:0; display:block; margin:0; padding:0; border:0; background:transparent; }
+  .album,.album:nth-child(even),.album:nth-child(3n) { flex:none; width:100%; height:auto; min-height:0; display:block; margin:0; padding:0; border:0; background:transparent; }
   .album-heading,.album:nth-child(even) .album-heading { display:flex; align-items:baseline; justify-content:space-between; margin:0 0 8px; text-align:left; }
   .album-heading h2 { font-size:18px; }
   .album-carousel { width:100%; }

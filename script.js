@@ -5,20 +5,39 @@ const closeButton = lightbox.querySelector('.lightbox-close');
 const lightboxPrevious = lightbox.querySelector('[data-lightbox-previous]');
 const lightboxNext = lightbox.querySelector('[data-lightbox-next]');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const phoneLayout = window.matchMedia('(max-width: 700px)');
 let lightboxCards = [];
 let lightboxIndex = 0;
 let lightboxSwipeStart = null;
 const albums = Array.isArray(window.PHOTO_ALBUMS) ? window.PHOTO_ALBUMS : [];
+
+function loadPreview(image) {
+  if (image.getAttribute('src')) return;
+  image.src = image.dataset.previewSrc;
+}
+
+const previewObserver = 'IntersectionObserver' in window
+  ? new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      loadPreview(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, { rootMargin: '240px 0px' })
+  : null;
 
 function createPhotoCard(photo) {
   const card = document.createElement('figure');
   const image = document.createElement('img');
   const caption = document.createElement('figcaption');
   card.className = 'photo-card';
-  image.src = photo.previewSrc;
+  image.dataset.previewSrc = photo.previewSrc;
   image.dataset.fullSrc = photo.fullSrc;
   image.alt = photo.alt;
   image.loading = 'lazy';
+  image.decoding = 'async';
+  if (previewObserver) previewObserver.observe(image);
+  else loadPreview(image);
   caption.textContent = photo.alt;
   card.append(image, caption);
   return card;
@@ -61,7 +80,7 @@ function enablePhotoDragging(track) {
 }
 
 function enableAutoFlow(track, direction, duration) {
-  if (reducedMotion) return;
+  if (reducedMotion || phoneLayout.matches) return;
   let lastTime = performance.now();
   let virtualPosition = track.scrollLeft;
   let pauseUntil = 0;
@@ -134,7 +153,7 @@ function buildMemoryStage() {
     if (sourceCards.length > 1 && next === stageIndex) next = (next + 1) % sourceCards.length;
     const sourceImage = sourceCards[next].querySelector('img');
     const update = () => {
-      stageImage.src = sourceImage.getAttribute('src');
+      stageImage.src = sourceImage.dataset.previewSrc || sourceImage.getAttribute('src');
       stageImage.dataset.fullSrc = sourceImage.dataset.fullSrc || sourceImage.getAttribute('data-full-src');
       stageImage.alt = sourceImage.alt;
       stageIndex = next;
