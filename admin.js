@@ -1,4 +1,4 @@
-const adminConfig = () => window.GUESTBOOK_CONFIG || { workerUrl: '' };
+const adminConfig = () => window.GUESTBOOK_CONFIG || { apiUrl: '' };
 const loginForm = document.querySelector('[data-admin-login]');
 const passwordInput = document.querySelector('#admin-password');
 const lock = document.querySelector('[data-admin-lock]');
@@ -14,7 +14,7 @@ function setStatus(message, isError = false) {
 }
 
 function endpoint(path) {
-  return `${adminConfig().workerUrl.replace(/\/$/, '')}${path}`;
+  return `${adminConfig().apiUrl.replace(/\/$/, '')}${path}`;
 }
 
 function password() { return sessionStorage.getItem(sessionKey) || ''; }
@@ -71,7 +71,7 @@ async function loadAllMessages() {
 
 async function openReviewDesk(event) {
   event.preventDefault();
-  if (!adminConfig().workerUrl) return setStatus('请先完成留言服务设置。', true);
+  if (!adminConfig().apiUrl || adminConfig().apiUrl === '__CLOUDBASE_GATEWAY_URL__') return setStatus('请先完成留言服务设置。', true);
   const value = passwordInput.value;
   if (!value) return setStatus('请输入管理口令。', true);
   sessionStorage.setItem(sessionKey, value);
@@ -91,8 +91,8 @@ async function reviewMessage(id, action, clickedButton) {
   const buttons = card?.querySelectorAll('button') || [];
   buttons.forEach((button) => { button.disabled = true; });
   try {
-    const response = await fetch(endpoint(`/api/admin/messages/${id}`), requestOptions({
-      method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action }), cache: 'no-store',
+    const response = await fetch(endpoint('/api/admin/messages'), requestOptions({
+      method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, action }), cache: 'no-store',
     }));
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || '操作未完成。');

@@ -1,4 +1,4 @@
-const config = () => window.GUESTBOOK_CONFIG || { workerUrl: '' };
+const config = () => window.GUESTBOOK_CONFIG || { apiUrl: '' };
 const form = document.querySelector('[data-guestbook-form]');
 const statusLine = document.querySelector('[data-guestbook-status]');
 const notice = document.querySelector('[data-setup-notice]');
@@ -14,11 +14,11 @@ function setStatus(message, isError = false) {
 }
 
 function ready() {
-  return Boolean(config().workerUrl);
+  return Boolean(config().apiUrl) && config().apiUrl !== '__CLOUDBASE_GATEWAY_URL__';
 }
 
 function endpoint(path) {
-  return `${config().workerUrl.replace(/\/$/, '')}${path}`;
+  return `${config().apiUrl.replace(/\/$/, '')}${path}`;
 }
 
 function renderPublicMessages(messages) {
@@ -68,7 +68,7 @@ async function submitMessage(event) {
   setStatus('正在送达…');
   try {
     const response = await fetch(endpoint('/api/messages'), {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ nickname, body }),
+      method: 'POST', headers: { 'content-type': 'text/plain' }, body: JSON.stringify({ nickname, body }),
     });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || '暂时无法提交，请稍后再试。');

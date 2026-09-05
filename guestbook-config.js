@@ -1,3 +1,3 @@
 window.GUESTBOOK_CONFIG = {
-  workerUrl: 'https://zyx-guestbook.1323655521.workers.dev'
+  apiUrl: 'https://zyxguestbook-d1glmtmbi4cab5631-1481513250.ap-shanghai.app.tcloudbase.com'
 };
