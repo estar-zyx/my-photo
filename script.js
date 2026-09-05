@@ -1,6 +1,4 @@
 const legacyMain = document.querySelector('body > main');
-const legacyGallery = document.getElementById('gallery');
-const sourceCards = Array.from(legacyGallery.querySelectorAll('.photo-card'));
 const lightbox = document.querySelector('.lightbox');
 const lightboxImage = lightbox.querySelector('img');
 const closeButton = lightbox.querySelector('.lightbox-close');
@@ -10,14 +8,24 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matc
 let lightboxCards = [];
 let lightboxIndex = 0;
 let lightboxSwipeStart = null;
+const albums = Array.isArray(window.PHOTO_ALBUMS) ? window.PHOTO_ALBUMS : [];
 
-const groups = [
-  ['赛场与伙伴', [64, 13, 14]], ['电子竞赛', [0, 2, 3, 4, 6]],
-  ['创作作品', [7, 1, 8, 9, 10, 11, 6]], ['萝卜日记', [15, 16, 17, 18, 19, 20]],
-  ['好友相聚', [21, 22, 23, 24]], ['日常瞬间', [25, 26, 27, 28]],
-  ['毕业时刻', [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63]],
-  ['RM', [5, 12, 29, 30, 31, 32, 33, 34, 35, 36]],
-];
+function createPhotoCard(photo) {
+  const card = document.createElement('figure');
+  const image = document.createElement('img');
+  const caption = document.createElement('figcaption');
+  card.className = 'photo-card';
+  image.src = photo.previewSrc;
+  image.dataset.fullSrc = photo.fullSrc;
+  image.alt = photo.alt;
+  image.loading = 'lazy';
+  caption.textContent = photo.alt;
+  card.append(image, caption);
+  return card;
+}
+
+const cardSets = albums.map((album) => album.photos.map(createPhotoCard));
+const sourceCards = cardSets.flat();
 
 function enablePhotoDragging(track) {
   let pointerId = null;
@@ -142,14 +150,15 @@ function buildMemoryStage() {
 }
 
 function buildAlbums(wall) {
-  groups.forEach(([name, indexes], groupIndex) => {
+  albums.forEach((albumDefinition, groupIndex) => {
+    const { name, photos } = albumDefinition;
     const album = document.createElement('section');
     const titleId = `album-${groupIndex + 1}`;
     album.className = 'album';
     album.setAttribute('aria-labelledby', titleId);
-    album.innerHTML = `<div class="album-heading"><span>${String(groupIndex + 1).padStart(2, '0')} / ${String(indexes.length).padStart(2, '0')}</span><h2 id="${titleId}">${name}</h2></div><div class="album-carousel"><div class="photos film-strip" aria-label="${name}照片"></div></div>`;
+    album.innerHTML = `<div class="album-heading"><span>${String(groupIndex + 1).padStart(2, '0')} / ${String(photos.length).padStart(2, '0')}</span><h2 id="${titleId}">${name}</h2></div><div class="album-carousel"><div class="photos film-strip" aria-label="${name}照片"></div></div>`;
     const track = album.querySelector('.photos');
-    const cards = indexes.map((cardIndex) => sourceCards[cardIndex]);
+    const cards = cardSets[groupIndex];
     cards.forEach((card, photoIndex) => { card.dataset.lightboxIndex = String(photoIndex); track.append(card); });
     enablePhotoDragging(track);
     wall.append(album);
@@ -168,6 +177,7 @@ const wall = document.createElement('section');
 wall.className = 'album-wall';
 wall.id = 'gallery';
 wall.setAttribute('aria-label', '照片分组');
+wall.style.setProperty('--album-count', String(albums.length));
 legacyMain.append(stage, wall);
 buildAlbums(wall);
 

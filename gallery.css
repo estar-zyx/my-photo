@@ -27,7 +27,7 @@ nav { height:100%; display:flex; align-items:center; justify-content:space-betwe
 .review-entry:hover { color:var(--paper); border-color:rgba(221,189,108,.7); background:rgba(217,187,112,.12); }
 .stage-note { margin:19px 0 0; color:rgba(241,234,217,.64); font-size:12px; letter-spacing:.06em; }
 .album-wall { position:relative; min-width:0; min-height:0; height:100%; display:flex; flex-direction:column; justify-content:center; gap:clamp(6px,1vh,12px); overflow:hidden; }
-.album { min-height:0; height:calc((100% - 76px) / 8); display:grid; grid-template-columns:124px minmax(0,1fr); gap:18px; align-items:center; padding:5px 0 5px 15px; border-left:1px solid var(--line); background:linear-gradient(90deg,rgba(255,255,255,.035),transparent 72%); transition:transform .25s ease,background .25s ease; }
+.album { flex:1 1 0; min-height:0; display:grid; grid-template-columns:124px minmax(0,1fr); gap:18px; align-items:center; padding:5px 0 5px 15px; border-left:1px solid var(--line); background:linear-gradient(90deg,rgba(255,255,255,.035),transparent 72%); transition:transform .25s ease,background .25s ease; }
 .album:nth-child(even) { margin-left:clamp(16px,6.5vw,86px); grid-template-columns:minmax(0,1fr) 124px; padding:5px 15px 5px 0; border-right:1px solid var(--line); border-left:0; background:linear-gradient(270deg,rgba(255,255,255,.035),transparent 72%); }
 .album:nth-child(3n) { margin-left:clamp(7px,2.6vw,36px); }
 .album:nth-child(even) .album-heading { order:2; text-align:right; }
